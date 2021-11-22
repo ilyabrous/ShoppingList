@@ -16,10 +16,16 @@ import com.example.shoppinglist.adapters.ShoppingListAdapter
 import com.example.shoppinglist.databinding.ActivityShoppingBinding
 import com.example.shoppinglist.model.db.entity.ShoppingItem
 import com.example.shoppinglist.model.repositories.ShoppingRepository
+import org.kodein.di.Kodein
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.kodein
+import org.kodein.di.generic.instance
 
-class ShoppingActivity : AppCompatActivity() {
+class ShoppingActivity : AppCompatActivity(), KodeinAware {
 
+    override val kodein by kodein()
     private lateinit var binding: ActivityShoppingBinding
+    private val factory: ShoppingListFactory by instance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,9 +33,7 @@ class ShoppingActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        val database = ShoppingDatabase(this)
-        val repository = ShoppingRepository(database)
-        val factory = ShoppingListFactory(repository)
+
 
         val viewModel = ViewModelProviders.of(this, factory).get(ShoppingViewModel::class.java)
         val adapter = ShoppingListAdapter(viewModel, listOf())
